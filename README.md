@@ -60,3 +60,40 @@ Takes a CSV with empty Yield/Purity columns and fills them using the synthetic s
 ```bash
 uv run python main.py run --input "Chemical Multi-Objective Optimization_run_2.csv" --output "run_2_filled.csv"
 ```
+
+### `plot` — Plot objectives across datasets
+
+Overlays multiple experiment datasets on a single Yield vs Purity scatter plot. Each dataset gets a distinct color (semi-transparent to show overlap). Datasets are defined in a JSON config file.
+
+**Parameters**
+
+| Argument | Default | Description |
+|---|---|---|
+| `--config` | `plot_config.json` | Config file with dataset list and axis settings |
+| `--output` | None | Save plot to file (PNG/PDF); if omitted, opens interactive window |
+
+**Config format (`plot_config.json`):**
+
+```json
+{
+    "x": "Yield",
+    "y": "Purity",
+    "datasets": [
+        {"file": "campaign_data_1.csv",  "label": "Original data"},
+        {"file": "campaign_data_2.csv",  "label": "Batch + 30 random"},
+        {"file": "run_2_filled.csv",     "label": "Batch 1 BO (+10)"}
+    ]
+}
+```
+
+Missing files are skipped with a warning — safe to include future batches in the config in advance.
+
+**Examples:**
+
+```bash
+# Show interactive window
+uv run python main.py plot
+
+# Save to file
+uv run python main.py plot --output results.png
+```
